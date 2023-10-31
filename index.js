@@ -1,19 +1,27 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require("express");
+const mongoose = require("mongoose");
+const app = express();
+const port = 3000;
 
-//cors enable
-const cors = require('cors')
-app.use(cors())
+//connect to mongodb
+mongoose.connect("mongodb://127.0.0.1:27017/lab5");
 
-app.get('/api/v1/messages', (req, res) => {
-    res.json({
-        "status": "success",
-        "message": "GET messages",
-        "data": [],
-    })
-})
+//check connection 
+const db = mongoose.connection;
+db.once("error", console.error.bind(console, "connection error:"));
+
+//import routes
+const messagesRouter = require("./routes/api/v1/messages");
+
+// enable cors express
+// const cors = require("cors");
+// app.use(cors());
+
+app.use(express.json());
+
+//use routes
+app.use("/api/v1/messages", messagesRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+    console.log(`Example app listening on port ${port}`);
+});
