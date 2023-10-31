@@ -2,15 +2,54 @@
 const Message = require("../../../models/Message");
 
 const index = async (req, res) => {
-    let messages = await Message.find({});
-    res.json({
-        status: "success",
-        message: "GETTING messages",
-        data: [{
-            messages: messages
-        }],
-    });
+    let messages;
+    if(req.query.user) {
+        try {
+            let messages = await Message.find({ username: req.query.user });
+            if (messages.length > 0) {
+                res.json({
+                    "status": "success",
+                    "message": "GETTING messages for user " + req.query.user,
+                    "data": {
+                        "messages": messages
+                    }
+                });
+            } else {
+                res.json({
+                    "status": "error",
+                    "message": "No messages found for user " + req.query.user
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            res.json({
+                "status": "error",
+                "message": "An error occurred while getting the messages."
+            });
+        }
+    }
+    else {
+        try{
+            messages = await Message.find({});
+            res.json({
+                status: "success",
+                message: "GETTING messages",
+                data: [{
+                    messages: messages
+                }],
+            });
+        }
+        catch(err){
+            console.error(err);
+            res.json({
+                status: "error",
+                message: "An error occurred while getting the messages.",
+            });
+        }
+    }
+    
 };
+
 const create = async(req, res) => {
     let m = new Message();
     m.message = req.body.message;
@@ -36,7 +75,6 @@ const create = async(req, res) => {
 const show = async (req, res) => {
     try {
         let message = await Message.findById(req.params.id);
-        console.log(message);
         if (message) {
             res.json({
                 "status": "success",
@@ -107,31 +145,6 @@ const destroy = async (req, res) => {
         });
     }
 };
-const getByUser = async (req, res) => {
-    try {
-        let messages = await Message.find({ username: req.query.user });
-        if (messages.length > 0) {
-            res.json({
-                "status": "success",
-                "message": "GETTING messages for user " + req.query.user,
-                "data": {
-                    "messages": messages
-                }
-            });
-        } else {
-            res.json({
-                "status": "error",
-                "message": "No messages found for user " + req.query.user
-            });
-        }
-    } catch (err) {
-        console.error(err);
-        res.json({
-            "status": "error",
-            "message": "An error occurred while getting the messages."
-        });
-    }
-};
 
 
 module.exports.index = index;
@@ -139,4 +152,3 @@ module.exports.create = create;
 module.exports.show = show;
 module.exports.update = update;
 module.exports.destroy = destroy;
-module.exports.getByUser = getByUser;

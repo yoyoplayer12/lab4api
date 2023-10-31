@@ -6,7 +6,7 @@ const router = express.Router();
 //import controller
 const messagesController = require("../../../controllers/api/v1/messages");
 
-router.get('/', messagesController.getByUser);
+
 router.get("/", messagesController.index);
 router.get("/:id", messagesController.show);
 router.post("/", messagesController.create);
