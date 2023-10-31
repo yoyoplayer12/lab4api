@@ -14,7 +14,7 @@ const index = async (req, res) => {
 const create = async(req, res) => {
     let m = new Message();
     m.message = req.body.message;
-    m.sender = req.body.sender;
+    m.username = req.body.username;
      try {
         let doc = await m.save();
         res.json({
@@ -107,9 +107,36 @@ const destroy = async (req, res) => {
         });
     }
 };
+const getByUser = async (req, res) => {
+    try {
+        let messages = await Message.find({ username: req.query.user });
+        if (messages.length > 0) {
+            res.json({
+                "status": "success",
+                "message": "GETTING messages for user " + req.query.user,
+                "data": {
+                    "messages": messages
+                }
+            });
+        } else {
+            res.json({
+                "status": "error",
+                "message": "No messages found for user " + req.query.user
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        res.json({
+            "status": "error",
+            "message": "An error occurred while getting the messages."
+        });
+    }
+};
+
 
 module.exports.index = index;
 module.exports.create = create;
 module.exports.show = show;
 module.exports.update = update;
 module.exports.destroy = destroy;
+module.exports.getByUser = getByUser;

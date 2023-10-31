@@ -10,7 +10,7 @@ const MessageSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-    sender: {
+    username: {
         type: String,
         required: true,
     },
