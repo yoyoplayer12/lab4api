@@ -59,6 +59,32 @@ const show = async (req, res) => {
         });
     };
 }
+const update = async (req, res) => {
+    try {
+        let message = await Message.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (message) {
+            res.json({
+                "status": "success",
+                "message": "UPDATED message with ID " + req.params.id,
+                "data": {
+                    "message": message
+                }
+            });
+        } else {
+            res.json({
+                "status": "error",
+                "message": "Message with ID " + req.params.id + " not found."
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        res.json({
+            "status": "error",
+            "message": "An error occurred while updating the message."
+        });
+    }
+};
 module.exports.index = index;
 module.exports.create = create;
 module.exports.show = show;
+module.exports.update = update;
