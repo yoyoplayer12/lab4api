@@ -84,7 +84,32 @@ const update = async (req, res) => {
         });
     }
 };
+const destroy = async (req, res) => {
+    try {
+        let message = await Message.findByIdAndDelete(req.params.id);
+        console.log(message);
+        if (message) {
+            res.json({
+                "status": "success",
+                "message": "DELETED message with ID " + req.params.id
+            });
+        } else {
+            res.json({
+                "status": "error",
+                "message": "Message with ID " + req.params.id + " not found."
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        res.json({
+            "status": "error",
+            "message": "An error occurred while deleting the message."
+        });
+    }
+};
+
 module.exports.index = index;
 module.exports.create = create;
 module.exports.show = show;
 module.exports.update = update;
+module.exports.destroy = destroy;
