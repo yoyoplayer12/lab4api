@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 //connect to mongodb
-const credentials = "./etc/secrets/credentials";
+const credentials = "./etc/secrets/credentials.pem";
 mongoose.connect("mongodb+srv://lab4.cre55c4.mongodb.net/lab4?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority", {
     tlsCertificateKeyFile: credentials,
 });
